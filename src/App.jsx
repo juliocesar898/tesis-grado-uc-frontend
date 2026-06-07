@@ -8,18 +8,18 @@ const SignalDisplay = ({ isActive, signalData }) => {
       {/* =========================================================
           TARJETA 1: Analizador de Espectro (PSD) Calibrado y Centrado
       ========================================================= */}
-      <div className='bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-lg min-h-[320px] flex flex-col justify-between'>
+      <div className='bg-white border border-blue-100 rounded-xl p-4 shadow-sm min-h-[320px] flex flex-col justify-between'>
         <div className='flex justify-between items-center mb-4'>
-          <h3 className='text-gray-400 font-medium text-sm uppercase tracking-wider'>
+          <h3 className='text-gray-500 font-medium text-sm uppercase tracking-wider'>
             Densidad Espectral de Potencia (PSD)
           </h3>
           <span
             className={`w-2.5 h-2.5 rounded-full ${
-              isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-600'
+              isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-300'
             }`}></span>
         </div>
 
-        <div className='flex-grow flex items-end justify-center border border-gray-950 rounded-lg bg-black/50 p-4 h-56 gap-[2px] overflow-hidden'>
+        <div className='flex-grow flex items-end justify-center border border-blue-200 rounded-lg bg-blue-50/50 p-4 h-56 gap-[2px] overflow-hidden'>
           {isActive && signalData?.psd?.length > 0 ? (
             (() => {
               const rawPsd = signalData.psd;
@@ -54,14 +54,14 @@ const SignalDisplay = ({ isActive, signalData }) => {
                 return (
                   <div
                     key={idx}
-                    className='bg-gradient-to-t from-green-600 via-emerald-400 to-cyan-400 flex-grow rounded-t-sm transition-all duration-75'
+                    className='bg-gradient-to-t from-blue-600 via-sky-400 to-cyan-400 flex-grow rounded-t-sm transition-all duration-75'
                     style={{ height: `${heightPercentage}%` }}
                   />
                 );
               });
             })()
           ) : (
-            <div className='self-center text-gray-600 font-mono text-sm'>
+            <div className='self-center text-gray-500 font-mono text-sm'>
               {isActive
                 ? '[ Recibiendo ráfagas FFT... ]'
                 : '[ Grifo Cerrado - Stream Inactivo ]'}
@@ -73,29 +73,29 @@ const SignalDisplay = ({ isActive, signalData }) => {
       {/* =========================================================
           TARJETA 2: Diagrama de Constelación Espacial I/Q
       ========================================================= */}
-      <div className='bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-lg min-h-[320px] flex flex-col justify-between'>
+      <div className='bg-white border border-blue-100 rounded-xl p-4 shadow-sm min-h-[320px] flex flex-col justify-between'>
         <div className='flex justify-between items-center mb-4'>
-          <h3 className='text-gray-400 font-medium text-sm uppercase tracking-wider'>
+          <h3 className='text-gray-500 font-medium text-sm uppercase tracking-wider'>
             Espacio de Estado de Constelación (I/Q)
           </h3>
           <span
             className={`w-2.5 h-2.5 rounded-full ${
-              isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-600'
+              isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-300'
             }`}></span>
         </div>
 
-        <div className='flex-grow flex items-center justify-center border border-gray-950 rounded-lg bg-black/50 h-56 relative overflow-hidden'>
+        <div className='flex-grow flex items-center justify-center border border-blue-200 rounded-lg bg-blue-50/50 h-56 relative overflow-hidden'>
           {isActive && signalData?.iq?.i?.length > 0 ? (
             <div className='absolute inset-0 flex items-center justify-center'>
               {/* Ejes Cartesianos */}
-              <div className='absolute w-full h-[1px] bg-gray-800/60'></div>
-              <div className='absolute h-full w-[1px] bg-gray-800/60'></div>
+              <div className='absolute w-full h-[1px] bg-blue-200'></div>
+              <div className='absolute h-full w-[1px] bg-blue-200'></div>
 
               {/* Etiquetas de los Ejes */}
-              <span className='absolute right-2 top-1/2 text-[10px] font-mono text-gray-600 transform -translate-y-1/2'>
+              <span className='absolute right-2 top-1/2 text-[10px] font-mono text-gray-500 transform -translate-y-1/2'>
                 I (Fase)
               </span>
-              <span className='absolute top-2 left-1/2 text-[10px] font-mono text-gray-600 transform -translate-x-1/2'>
+              <span className='absolute top-2 left-1/2 text-[10px] font-mono text-gray-500 transform -translate-x-1/2'>
                 Q (Cuad)
               </span>
 
@@ -105,7 +105,7 @@ const SignalDisplay = ({ isActive, signalData }) => {
                 return (
                   <div
                     key={idx}
-                    className='absolute w-1.5 h-1.5 bg-cyan-400 rounded-full opacity-80 shadow-[0_0_4px_#22d3ee]'
+                    className='absolute w-1.5 h-1.5 bg-blue-500 rounded-full opacity-80 shadow-[0_0_4px_#3b82f6]'
                     style={{
                       left: `${50 + valI * 40}%`,
                       top: `${50 - valQ * 40}%`
@@ -115,7 +115,7 @@ const SignalDisplay = ({ isActive, signalData }) => {
               })}
             </div>
           ) : (
-            <p className='text-gray-600 font-mono text-sm'>
+            <p className='text-gray-500 font-mono text-sm'>
               [ Constelación Vacía ]
             </p>
           )}
@@ -131,22 +131,22 @@ const MetricsPanel = ({ isActive, metrics }) => {
     {
       title: 'Frecuencia Central',
       value: isActive ? metrics?.centerFrequency : '---',
-      color: 'text-blue-400'
+      color: 'text-blue-600'
     },
     {
       title: 'Ancho de Banda',
       value: isActive ? metrics?.bandwidth : '---',
-      color: 'text-purple-400'
+      color: 'text-purple-600'
     },
     {
       title: 'Modulación Detectada',
       value: isActive ? metrics?.modulation : '---',
-      color: 'text-amber-400'
+      color: 'text-amber-600'
     },
     {
       title: 'Confianza IA',
       value: isActive ? metrics?.accuracy : '---',
-      color: 'text-emerald-400'
+      color: 'text-emerald-600'
     }
   ];
 
@@ -155,7 +155,7 @@ const MetricsPanel = ({ isActive, metrics }) => {
       {defaultMetrics.map((metric, idx) => (
         <div
           key={idx}
-          className='bg-gray-900 border border-gray-800 p-4 rounded-xl shadow-md'>
+          className='bg-white border border-blue-100 p-4 rounded-xl shadow-sm'>
           <p className='text-gray-500 text-xs font-medium uppercase tracking-wider mb-1'>
             {metric.title}
           </p>
@@ -244,18 +244,18 @@ function App() {
   }, [isActive, config.frequency]);
 
   return (
-    <div className='min-h-screen bg-[#0b0f19] text-gray-100 antialiased font-sans'>
-      <header className='border-b border-gray-900 bg-gray-950/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4'>
+    <div className='min-h-screen bg-blue-50 text-gray-900 antialiased font-sans'>
+      <header className='border-b border-blue-200 bg-blue-100/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4'>
         <div>
-          <h1 className='text-xl font-bold tracking-tight bg-gradient-to-r pt-1 from-white via-gray-200 to-gray-500 bg-clip-text text-transparent'>
+          <h1 className='text-xl font-bold tracking-tight bg-gradient-to-r pt-1 from-blue-700 via-blue-600 to-blue-500 bg-clip-text text-transparent'>
             Reconocimiento y Caracterización Automática de Señales
           </h1>
-          <p className='text-xs text-gray-500 mt-0.5 font-medium'>
+          <p className='text-xs text-gray-600 mt-0.5 font-medium'>
             Trabajo Especial de Grado — SDR & Inteligencia Artificial
           </p>
         </div>
 
-        <div className='flex items-center gap-2 bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-800'>
+        <div className='flex items-center gap-2 bg-white/80 px-3 py-1.5 rounded-full border border-blue-200 shadow-sm'>
           <span className='relative flex h-2 w-2'>
             <span
               className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
@@ -267,8 +267,8 @@ function App() {
               }`}></span>
           </span>
           <span
-            className={`text-xs font-mono ${
-              isActive ? 'text-green-400' : 'text-amber-400'
+            className={`text-xs font-mono font-medium ${
+              isActive ? 'text-green-700' : 'text-amber-700'
             }`}>
             Core Backend: {isActive ? 'Transmitiendo' : 'Detenido'}
           </span>
