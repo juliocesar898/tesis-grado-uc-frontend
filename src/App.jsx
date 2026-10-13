@@ -272,10 +272,102 @@ const MetricsPanel = ({ isActive, metrics }) => {
   );
 };
 
+// 2.2 COMPONENTE DE TELEMETRÍA CIENTÍFICA & EXTRACCIÓN DE PARÁMETROS (SIGINT)
+const TelemetryPanel = ({ isActive, telemetry }) => {
+  const cards = [
+    {
+      label: 'PAPR (Factor de Cresta)',
+      value: isActive && telemetry?.papr_db !== undefined ? `${telemetry.papr_db.toFixed(1)} dB` : '---',
+      tag: 'Variación Envolvente',
+      tagColor: 'bg-amber-50 text-amber-700 border-amber-200',
+      hint: 'Pico vs Promedio (|s|²)',
+      icon: '⚡'
+    },
+    {
+      label: 'Cumulante Estadístico |C₄₀|',
+      value: isActive && telemetry?.c40 !== undefined ? `${telemetry.c40.toFixed(3)}` : '---',
+      tag: 'Simetría de Fase 4° Ord.',
+      tagColor: 'bg-purple-50 text-purple-700 border-purple-200',
+      hint: 'Firma Teórica HOC',
+      icon: '📐'
+    },
+    {
+      label: 'Momento Estadístico |C₂₀|',
+      value: isActive && telemetry?.c20 !== undefined ? `${telemetry.c20.toFixed(3)}` : '---',
+      tag: 'Elongación de Eje',
+      tagColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      hint: 'Distorsión de Portadora',
+      icon: '📊'
+    },
+    {
+      label: 'Offset Residual (CFO Δf)',
+      value: isActive && telemetry?.freq_offset_hz !== undefined ? `${telemetry.freq_offset_hz > 0 ? '+' : ''}${(telemetry.freq_offset_hz / 1e3).toFixed(1)} kHz` : '---',
+      tag: 'Desvío Doppler / OL',
+      tagColor: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+      hint: 'Pico FFT de Banda Base',
+      icon: '🎯'
+    },
+    {
+      label: 'Ancho de Banda Ocupado',
+      value: isActive && telemetry?.occupied_bw_hz !== undefined ? `${(telemetry.occupied_bw_hz / 1e3).toFixed(0)} kHz` : '---',
+      tag: 'Banda a -10 dB',
+      tagColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      hint: 'Espectro de Potencia',
+      icon: '📡'
+    }
+  ];
+
+  return (
+    <div className='bg-white border border-blue-100 rounded-2xl p-4 shadow-sm'>
+      <div className='flex items-center justify-between mb-3 border-b border-gray-100 pb-2.5'>
+        <div className='flex items-center gap-2'>
+          <span className='w-2 h-2 rounded-full bg-blue-600'></span>
+          <h3 className='text-xs font-bold uppercase tracking-wider text-gray-700'>
+            Telemetría Científica de Señal (SIGINT & Caracterización RF)
+          </h3>
+          <span className='px-1.5 py-0.5 text-[9px] font-mono bg-blue-50 text-blue-700 border border-blue-200 rounded font-semibold'>
+            Extracción HOC & DSP
+          </span>
+        </div>
+        <span className='text-[10px] font-mono text-gray-400'>
+          {isActive ? '● En Análisis Continuo' : '○ Standby'}
+        </span>
+      </div>
+
+      <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3'>
+        {cards.map((c, i) => (
+          <div
+            key={i}
+            className='bg-slate-50/70 border border-slate-200/80 rounded-xl p-3 flex flex-col justify-between hover:border-blue-300 transition-colors'>
+            <div className='flex items-center justify-between mb-1'>
+              <span className='text-[10px] font-semibold text-gray-500 uppercase tracking-tight'>
+                {c.label}
+              </span>
+              <span className='text-xs'>{c.icon}</span>
+            </div>
+            <p className='text-lg font-bold font-mono text-slate-800 tracking-tight my-1'>
+              {c.value}
+            </p>
+            <div className='mt-1 pt-1 border-t border-slate-200/60 flex flex-col gap-0.5'>
+              <span className={`text-[9px] font-mono font-medium px-1.5 py-0.5 rounded border inline-block w-fit ${c.tagColor}`}>
+                {c.tag}
+              </span>
+              <span className='text-[9px] font-mono text-gray-400 mt-0.5'>
+                {c.hint}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // 3. COMPONENTE MAESTRO (APP)
 function App() {
   const [isActive, setIsActive] = useState(false);
   const [metrics, setMetrics] = useState(null);
+  const [telemetry, setTelemetry] = useState(null);
   const [signalData, setSignalData] = useState(null);
   const [spectrumInfo, setSpectrumInfo] = useState(null);
   const [backendOnline, setBackendOnline] = useState(false);
@@ -424,6 +516,11 @@ function App() {
             candidatesCount: topCandidates.length
           });
 
+          // Telemetría Científica / SIGINT
+          if (payload.telemetry) {
+            setTelemetry(payload.telemetry);
+          }
+
           // Pico espectral
           if (payload.spectrum) {
             setSpectrumInfo(payload.spectrum);
@@ -516,8 +613,9 @@ function App() {
         </div>
 
         {/* Panel Derecho: Visualizadores y Métricas */}
-        <div className='lg:col-span-3 space-y-6'>
+        <div className='lg:col-span-3 space-y-5'>
           <MetricsPanel isActive={isActive} metrics={metrics} />
+          <TelemetryPanel isActive={isActive} telemetry={telemetry} />
           <SignalDisplay
             isActive={isActive}
             signalData={signalData}
